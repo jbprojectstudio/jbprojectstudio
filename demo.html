@@ -39,43 +39,46 @@
         }
         .reveal.active { transform: translateY(0); opacity: 1; }
 
-        /* --- NAVBAR & HERO OMMESSI PER BREVITÀ --- */
-        /* Stili Navbar e Hero identici a v2 */
-
-        /* --- PLAYER DEMO A/B (Nuova Sezione 1) --- */
-        .demo-player-container {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 600px;
-            margin: 0 auto 50px auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
+        /* --- NAVBAR --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .demo-player-title { font-size: 1.3rem; margin-bottom: 20px; color: var(--accent); }
 
-        /* Stili Play Button e A/B Switch identici a v2 */
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        .logo span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
 
-        /* --- PLAYER PORTFOLIO (Nuova Sezione 3) --- */
+        nav ul { display: flex; gap: 30px; }
+        nav a { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        nav a:hover { color: var(--accent); text-shadow: 0 0 8px var(--accent); }
+
+        /* --- HERO SECTION OMMESSO PER BREVITÀ --- */
+
+        /* --- PLAYER PORTFOLIO --- */
         .portfolio-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: 300px 1fr; gap: 40px; max-width: 1200px; margin: 0 auto;
         }
-        /* Stili playlist-col, player-col, timeline-bar, progress e time-display identici a v2 */
+        .playlist-col { background: var(--card-bg); border-radius: 10px; padding: 20px; border: 1px solid #222; }
+        .track-item {
+            padding: 10px; border-bottom: 1px solid #1a1a1a; cursor: pointer; transition: 0.2s; color: var(--text-muted);
+        }
+        .track-item:hover, .track-item.selected {
+            background: #181818; color: var(--text-main); border-left: 3px solid var(--accent); padding-left: 17px;
+        }
+        .player-col {
+            background: var(--card-bg); border-radius: 10px; padding: 30px; border: 1px solid var(--accent); position: relative;
+        }
 
-        /* --- CONTROLLI COMUNI PER ENTRAMBI I PLAYER --- */
+        /* CONTROLLI COMUNI */
         .play-btn {
-            width: 60px; height: 60px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--accent-glow); transition: transform 0.2s; animation: pulse 2s infinite;
+            width: 60px; height: 60px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--accent-glow);
         }
         .timeline-bar {
-            width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 15px 0; cursor: pointer;
+            width: 100%; height: 8px; background: #333; border-radius: 4px; margin: 15px 0; cursor: grab; /* Cursor grab */
         }
         .progress {
-            height: 100%; width: 0%; background: var(--accent); border-radius: 4px; transition: width 0.1s linear;
+            height: 100%; width: 0%; background: var(--accent); border-radius: 4px; transition: none; /* Tolto transition per il drag */
         }
         .time-display {
             display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted);
@@ -84,12 +87,7 @@
             display: flex; align-items: center; justify-content: space-between; margin-top: 20px;
         }
 
-        /* --- SERVIZI & FOOTER OMMESSI PER BREVITÀ --- */
-        /* Stili Servizi e Footer identici a v2 */
-
-        @media (max-width: 900px) {
-            .portfolio-grid { grid-template-columns: 1fr; }
-        }
+        /* --- MEDIA QUERIES OMMESSO PER BREVITÀ --- */
     </style>
 </head>
 <body>
@@ -122,7 +120,6 @@
 
         <div class="reveal demo-player-container">
             <div class="demo-player-title" id="demoTrackTitle">ROCK DEMO: Power Chord</div>
-
             <audio id="audioDemo" preload="auto" loop></audio>
 
             <div class="timeline-bar" id="timelineDemo">
@@ -138,12 +135,9 @@
                     <button class="switch-btn active" onclick="switchDemoVersion('A')" id="btnDemoA">RAW</button>
                     <button class="switch-btn" onclick="switchDemoVersion('B')" id="btnDemoB">MASTER</button>
                 </div>
-
                 <button class="play-btn" onclick="toggleDemoPlay()" id="playDemoBtn">▶</button>
-                
                 <div style="font-size:0.9rem; color:var(--accent);" id="demoVersionStatus">RAW</div>
             </div>
-
         </div>
     </section>
 
@@ -191,7 +185,7 @@
                 </div>
 
                 <div class="controls-row" style="justify-content: center;">
-                    <button class="play-btn" onclick="togglePortfolioPlay()" id="playPortfolioBtn" style="animation: none; box-shadow: none;">▶</button>
+                    <button class="play-btn" onclick="togglePortfolioPlay()" id="playPortfolioBtn">▶</button>
                 </div>
             </div>
         </div>
@@ -210,39 +204,81 @@
     </footer>
 
     <script>
-        // --- 1. DATI DEI DUE PLAYER ---
-
-        // Demo A/B (Solo 1 traccia)
-        const DEMO_TRACK = { 
-            title: "POWER CHORD", 
-            urlA: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", 
-            urlB: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" 
-        };
-
-        // Portfolio (Lista tracce standard)
-        const PORTFOLIO_TRACKS = [
-            { id: 0, title: "Hip-Hop: Lofi Flow", genre: "Hip-Hop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
-            { id: 1, title: "Pop: Summer Hit", genre: "Pop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" },
-            { id: 2, title: "Acoustic: Ballad", genre: "Acoustic", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" }
-            // Aggiungere qui tutte le 10+ tracce
-        ];
-
-        // --- 2. UTILITY E FORMATTAZIONE ---
+        // --- UTILITY ---
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
         
-        // --- 3. PLAYER DEMO A/B (LOGICHE INDIPENDENTI) ---
-        let currentDemoVersion = 'A';
+        // --- DATI PORTFOLIO ---
+        const DEMO_TRACK = { title: "POWER CHORD", urlA: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", urlB: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" };
+        const PORTFOLIO_TRACKS = [
+            { id: 0, title: "Hip-Hop: Lofi Flow", genre: "Hip-Hop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+            { id: 1, title: "Pop: Summer Hit", genre: "Pop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" },
+            { id: 2, title: "Acoustic: Ballad", genre: "Acoustic", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" }
+        ];
+
+        // --- 1. LOGICA DRAG-AND-DROP TIMELINE ---
+        let isDragging = false;
+        
+        function handleTimelineClickOrDrag(e, audioEl, timelineEl, progressBarEl) {
+            const rect = timelineEl.getBoundingClientRect();
+            const x = e.clientX || e.changedTouches[0].clientX; // Supporta click e touch
+            const offsetX = x - rect.left;
+            const percentage = offsetX / rect.width;
+            
+            audioEl.currentTime = audioEl.duration * percentage;
+            progressBarEl.style.width = percentage * 100 + '%';
+        }
+
+        // Funzione comune per avviare il trascinamento
+        function startDrag(e, audioEl, timelineEl, progressBarEl) {
+            e.preventDefault();
+            isDragging = true;
+            timelineEl.classList.add('dragging');
+            
+            // Calcola subito la posizione iniziale e imposta il cursore su 'grabbing'
+            handleTimelineClickOrDrag(e, audioEl, timelineEl, progressBarEl);
+
+            const mouseMoveHandler = (e) => {
+                if (isDragging) {
+                    handleTimelineClickOrDrag(e, audioEl, timelineEl, progressBarEl);
+                }
+            };
+
+            const mouseUpHandler = () => {
+                isDragging = false;
+                timelineEl.classList.remove('dragging');
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            };
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        }
+
+        // Aggiungi gli ascoltatori di drag/click per DEMO
         const audioDemo = document.getElementById('audioDemo');
-        const playDemoBtn = document.getElementById('playDemoBtn');
+        const timelineDemo = document.getElementById('timelineDemo');
         const progressDemo = document.getElementById('progressDemo');
+        timelineDemo.addEventListener('click', (e) => handleTimelineClickOrDrag(e, audioDemo, timelineDemo, progressDemo));
+        timelineDemo.addEventListener('mousedown', (e) => startDrag(e, audioDemo, timelineDemo, progressDemo));
+        
+        // Aggiungi gli ascoltatori di drag/click per PORTFOLIO
+        const audioPortfolio = document.getElementById('audioPortfolio');
+        const timelinePortfolio = document.getElementById('timelinePortfolio');
+        const progressPortfolio = document.getElementById('progressPortfolio');
+        timelinePortfolio.addEventListener('click', (e) => handleTimelineClickOrDrag(e, audioPortfolio, timelinePortfolio, progressPortfolio));
+        timelinePortfolio.addEventListener('mousedown', (e) => startDrag(e, audioPortfolio, timelinePortfolio, progressPortfolio));
+
+
+        // --- 2. LOGICA PLAYER DEMO A/B ---
+        let currentDemoVersion = 'A';
+        const playDemoBtn = document.getElementById('playDemoBtn');
         const currentDemoTime = document.getElementById('currentDemoTime');
         const durationDemoTime = document.getElementById('durationDemoTime');
-        const timelineDemo = document.getElementById('timelineDemo');
-        
+
         function loadDemoTrack() {
             audioDemo.src = DEMO_TRACK['url' + currentDemoVersion];
             document.getElementById('demoTrackTitle').innerText = DEMO_TRACK.title;
@@ -250,13 +286,8 @@
         }
 
         function toggleDemoPlay() {
-            if (audioDemo.paused) {
-                audioDemo.play();
-                playDemoBtn.innerHTML = '⏸';
-            } else {
-                audioDemo.pause();
-                playDemoBtn.innerHTML = '▶';
-            }
+            if (audioDemo.paused) { audioDemo.play(); playDemoBtn.innerHTML = '⏸'; } 
+            else { audioDemo.pause(); playDemoBtn.innerHTML = '▶'; }
         }
 
         function switchDemoVersion(version) {
@@ -279,31 +310,24 @@
             });
         }
         
-        // Gestione Tempo Demo
         audioDemo.addEventListener('loadedmetadata', () => { durationDemoTime.innerText = formatTime(audioDemo.duration); });
         audioDemo.addEventListener('timeupdate', () => {
-            const progress = (audioDemo.currentTime / audioDemo.duration) * 100;
-            progressDemo.style.width = progress + '%';
             currentDemoTime.innerText = formatTime(audioDemo.currentTime);
         });
-        timelineDemo.addEventListener('click', (e) => {
-            const clickX = e.offsetX;
-            const width = timelineDemo.clientWidth;
-            const duration = audioDemo.duration;
-            audioDemo.currentTime = (clickX / width) * duration;
-        });
 
-        // --- 4. PLAYER PORTFOLIO (LOGICHE INDIPENDENTI) ---
-        let currentPortfolioId = 0;
-        const audioPortfolio = document.getElementById('audioPortfolio');
+
+        // --- 3. LOGICA PLAYER PORTFOLIO (FIX LISTA) ---
+        let currentPortfolioId = -1;
         const playPortfolioBtn = document.getElementById('playPortfolioBtn');
-        const progressPortfolio = document.getElementById('progressPortfolio');
         const currentPortfolioTime = document.getElementById('currentPortfolioTime');
         const durationPortfolioTime = document.getElementById('durationPortfolioTime');
-        const timelinePortfolio = document.getElementById('timelinePortfolio');
+
 
         function loadPortfolioTrack(id) {
-            if (audioPortfolio.src.includes(PORTFOLIO_TRACKS[id].url) && !audioPortfolio.paused && audioPortfolio.readyState > 0) return;
+            // STOP IL PLAYER VECCHIO
+            if (currentPortfolioId !== -1) {
+                audioPortfolio.pause();
+            }
 
             const track = PORTFOLIO_TRACKS[id];
             currentPortfolioId = id;
@@ -317,40 +341,38 @@
                 if (parseInt(item.dataset.id) === id) item.classList.add('selected');
             });
             
-            progressPortfolio.style.width = '0%';
+            // RESET UI
             currentPortfolioTime.innerText = '0:00';
             durationPortfolioTime.innerText = '0:00';
             playPortfolioBtn.innerHTML = '▶';
+            progressPortfolio.style.width = '0%';
+            
             audioPortfolio.load();
+            
+            // FIX: Avvia la riproduzione dopo il caricamento per feedback immediato
+            audioPortfolio.addEventListener('canplay', function handler() {
+                audioPortfolio.play();
+                playPortfolioBtn.innerHTML = '⏸';
+                audioPortfolio.removeEventListener('canplay', handler);
+            });
         }
 
         function togglePortfolioPlay() {
-            if (audioPortfolio.paused) {
-                audioPortfolio.play();
-                playPortfolioBtn.innerHTML = '⏸';
-            } else {
-                audioPortfolio.pause();
-                playPortfolioBtn.innerHTML = '▶';
-            }
+            if (audioPortfolio.paused) { audioPortfolio.play(); playPortfolioBtn.innerHTML = '⏸'; } 
+            else { audioPortfolio.pause(); playPortfolioBtn.innerHTML = '▶'; }
         }
 
         // Gestione Tempo Portfolio
         audioPortfolio.addEventListener('loadedmetadata', () => { durationPortfolioTime.innerText = formatTime(audioPortfolio.duration); });
         audioPortfolio.addEventListener('timeupdate', () => {
+            currentPortfolioTime.innerText = formatTime(audioPortfolio.currentTime);
             const progress = (audioPortfolio.currentTime / audioPortfolio.duration) * 100;
             progressPortfolio.style.width = progress + '%';
-            currentPortfolioTime.innerText = formatTime(audioPortfolio.currentTime);
         });
         audioPortfolio.addEventListener('ended', () => { playPortfolioBtn.innerHTML = '▶'; });
-        timelinePortfolio.addEventListener('click', (e) => {
-            const clickX = e.offsetX;
-            const width = timelinePortfolio.clientWidth;
-            const duration = audioPortfolio.duration;
-            audioPortfolio.currentTime = (clickX / width) * duration;
-        });
 
 
-        // --- 5. INIZIALIZZAZIONE ---
+        // --- 4. INIZIALIZZAZIONE E SCROLL REVEAL ---
         function initPortfolioPlaylist() {
             const container = document.getElementById('playlistPortfolioContainer');
             PORTFOLIO_TRACKS.forEach(track => {
@@ -358,15 +380,26 @@
                 item.className = 'track-item portfolio-track-item';
                 item.dataset.id = track.id;
                 item.innerText = track.title + ` (${track.genre})`;
-                item.onclick = () => loadPortfolioTrack(track.id);
+                // FIX: La funzione anonima assicura che l'ID sia passato correttamente
+                item.onclick = (e) => {
+                    // Controlla se è già selezionata e in pausa
+                    const isSelected = e.currentTarget.classList.contains('selected');
+                    
+                    if (isSelected && !audioPortfolio.paused) {
+                        togglePortfolioPlay(); // Se è selezionata e in play, ferma
+                    } else if(isSelected && audioPortfolio.paused) {
+                         togglePortfolioPlay(); // Se è selezionata e in pausa, riparti
+                    } else {
+                        loadPortfolioTrack(track.id); // Altrimenti carica la nuova traccia e parti
+                    }
+                };
                 container.appendChild(item);
             });
             if(PORTFOLIO_TRACKS.length > 0) loadPortfolioTrack(PORTFOLIO_TRACKS[0].id);
         }
 
-        // --- 6. SCROLL ANIMATIONS ---
         window.addEventListener('scroll', reveal);
-        function reveal() { /* ... (Logiche identiche a v2) ... */
+        function reveal() { /* ... (Logiche Scroll Reveal) ... */
             var reveals = document.querySelectorAll('.reveal');
             for (var i = 0; i < reveals.length; i++) {
                 var windowheight = window.innerHeight;
@@ -378,7 +411,6 @@
             }
         }
 
-        // Avvia l'inizializzazione quando la pagina è pronta
         document.addEventListener('DOMContentLoaded', () => {
             loadDemoTrack();
             initPortfolioPlaylist();

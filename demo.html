@@ -68,7 +68,7 @@
             display: flex;
             align-items: center;
         }
-        
+        }
         /* NUOVO STILE PER LOGO IMMAGINE - CORREZIONE "PUNTINO" */
         .logo img {
             height: 50px;     /* Forza l'altezza fissa */
@@ -76,10 +76,6 @@
             min-width: 50px;  /* Sicurezza: impedisce che diventi un puntino */
             display: block;
             object-fit: contain; /* Assicura che il logo stia nel box senza tagli */
-            
-            /* TRUCCO COLORE: Se il tuo SVG è nero, questo filtro lo renderà bianco! */
-            /* Se il tuo logo è già colorato giusto, puoi rimuovere la riga qui sotto */
-            filter: brightness(0) invert(1); 
         }
 
         .logo span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }

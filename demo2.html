@@ -357,7 +357,6 @@
         /* --- SERVIZI (GRID) --- */
         .grid-3 {
             display: grid;
-            /* MODIFICA: Da 'repeat(auto-fit...)' a 'repeat(3, 1fr)' per forzare 3 colonne fisse */
             grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             margin-top: 50px;
@@ -403,13 +402,59 @@
         .contact-info h2 { font-size: 3rem; margin-bottom: 20px; }
         .contact-info p { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; max-width: 500px; }
 
+        /* GRUPPO PULSANTI UNIFORMATO */
         .buttons-group {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            align-items: flex-start; /* Allinea i bottoni a sinistra */
+            width: 100%;
+            max-width: 300px;
         }
 
+        .buttons-group .btn-glow {
+            width: 100%; 
+            text-align: center;
+            box-sizing: border-box; 
+            display: block; 
+        }
+
+        /* --- NUOVI STILI SOCIAL --- */
+        .social-links {
+            /* Spostato nel footer, centrato di default */
+            margin-top: 0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center; /* Centrato per il footer */
+            margin-bottom: 40px; /* Spazio sotto i social */
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* FIX MAPPA */
         .map-section {
             width: 100%;
             height: 100%;
@@ -417,15 +462,17 @@
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid #333;
-            position: relative;
+            position: relative; /* Ancora per l'iframe assoluto */
+            background-color: #1a1a1a; /* Sfondo scuro di caricamento */
         }
 
         .map-section iframe {
+            position: absolute; /* Forza il riempimento del contenitore */
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border: 0;
-            /* Filtro per rendere la mappa scura e coerente col sito */
-            filter: grayscale(100%) invert(92%) contrast(83%);
         }
 
         .address-box {
@@ -435,26 +482,55 @@
             text-align: center;
         }
 
-        .copyright {
+        /* --- FOOTER ISTITUZIONALE (SEPARATO) --- */
+        footer {
+            background: #000;
+            padding: 60px 5%;
+            border-top: 1px solid #333;
             text-align: center;
-            margin-top: 80px;
+        }
+
+        .footer-brands-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        /* Placeholder per i Brand */
+        .brands-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            opacity: 0.5; /* Li rendiamo discreti */
+        }
+
+        .brand-item {
+            font-size: 1.2rem;
+            color: #444; /* Colore "disattivato" per placeholder */
+            font-weight: bold;
+            /* In futuro qui metterai le immagini dei loghi */
+        }
+
+        .copyright {
             font-size: 0.8rem;
-            opacity: 0.5;
-            grid-column: 1 / -1; /* Occupa tutta la larghezza in basso */
+            color: #555;
         }
 
         /* --- MEDIA QUERIES (RESPONSIVE) --- */
         @media (max-width: 900px) {
             .dual-player-grid { grid-template-columns: 1fr; gap: 50px; }
             
-            /* AGGIUNTA: Forza i servizi in verticale sotto i 900px (salta lo step "2+1") */
             .grid-3 { grid-template-columns: 1fr; }
 
-            /* Footer mobile: una colonna */
             .contact-container { grid-template-columns: 1fr; gap: 40px; text-align: center; }
             .contact-info { text-align: center; margin: 0 auto; }
             .contact-info p { margin: 0 auto 40px auto; }
-            .buttons-group { align-items: center; }
+            .buttons-group { margin: 0 auto; align-items: center; }
+            .social-links { justify-content: center; } 
         }
 
         @media (max-width: 768px) {
@@ -643,8 +719,8 @@
         </div>
     </section>
 
-    <!-- ================= FOOTER RISTRUTTURATO (LOCATION + CONTACT) ================= -->
-    <footer id="contact">
+    <!-- ================= SEZIONE CONTATTI (EX FOOTER PART 1) ================= -->
+    <section id="contact">
         <div class="reveal contact-container">
             
             <!-- Colonna Sinistra: Testo e Pulsanti -->
@@ -653,8 +729,7 @@
                 <p>Il feeling è tutto. Prenota un <strong>colloquio conoscitivo gratuito</strong> in studio (o una call online) per raccontarmi il tuo progetto senza impegno.</p>
                 
                 <div class="buttons-group">
-                    <!-- LINK WHATSAPP: Inserisci il tuo numero dopo 39 -->
-                    <a href="https://wa.me/3485491400" class="btn-glow btn-whatsapp" target="_blank">
+                    <a href="https://wa.me/39INSERISCINUMERO" class="btn-glow btn-whatsapp" target="_blank">
                         💬 Scrivimi su WhatsApp
                     </a>
                     
@@ -668,16 +743,42 @@
             <div style="width: 100%;">
                 <div class="map-section">
                     <!-- MAPPA EMBED GOOGLE: Sostituisci "src" con il tuo embed reale -->
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.6145657400943!2d12.165913776484722!3d42.520998224918195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1328f1e36b6fb107%3A0x75eb6eff7eea1aea!2sJB%20Project%20Studio%20(Giordano%20Boschetti)!5e0!3m2!1sit!2sit!4v1764718453290!5m2!1sit!2sit" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.6145657400943!2d12.165913776484722!3d42.520998224918195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1328f1e36b6fb107%3A0x75eb6eff7eea1aea!2sJB%20Project%20Studio%20(Giordano%20Boschetti)!5e0!3m2!1sit!2sit!4v1764718453290!5m2!1sit!2sit" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div class="address-box">
                     <p><strong>JB Project Studio</strong> - Viterbo (VT)<br>Ricevo su appuntamento</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="copyright">
-                &copy; 2025 JB Project Studio. All rights reserved.
-            </div>
+    <!-- ================= FOOTER VERO (ISTITUZIONALE) ================= -->
+    <footer>
+        
+        <!-- SOCIAL LINKS (Ora qui, centrati sopra i brand) -->
+        <div class="social-links">
+            <a href="#" class="social-link" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="social-link" title="Facebook">
+                <svg viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="#" class="social-link" title="YouTube">
+                <svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            </a>
+        </div>
+
+        <!-- PLACEHOLDER BRANDS (Futuro) -->
+        <div class="footer-brands-title">Trusted Brands & Partners</div>
+        <div class="brands-grid">
+            <div class="brand-item">LOGO 1</div>
+            <div class="brand-item">LOGO 2</div>
+            <div class="brand-item">LOGO 3</div>
+            <div class="brand-item">LOGO 4</div>
+        </div>
+
+        <div class="copyright">
+            &copy; 2025 JB Project Studio - P.IVA: XXXXXXXXXXX | All rights reserved.
         </div>
     </footer>
 
@@ -963,7 +1064,7 @@
 
             updateProgress: function() {
                 if (this.isDragging || !this.audio.duration) return;
-                const currentTime = this.audio.currentTime;
+                const currentTime = this.activeAudio.currentTime;
                 this.progressBar.value = currentTime;
                 this.currTimeDisplay.innerText = formatTime(currentTime);
             }

@@ -122,7 +122,7 @@
             text-align: center;
             background: linear-gradient(to bottom, rgba(5,5,5,0.3), var(--bg-color)), 
                         linear-gradient(45deg, rgba(191,0,255,0.2), rgba(0,0,0,0.8)),
-                        url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1920&q=80');
+                        url('img/studio_back.jpg');
             background-size: cover;
             background-position: center;
             padding: 80px 20px 20px 20px;
@@ -360,6 +360,16 @@
             .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
             .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
+/* FIX ALLINEAMENTO HAMBURGER */
+            /* Rimuove il contenitore nav dal flusso, così l'hamburger viene spinto tutto a destra */
+            nav {
+                position: absolute;
+                width: 0;
+                height: 0;
+                padding: 0;
+                margin: 0;
+            }
+            
             nav ul {
                 position: fixed; left: -100%; top: 70px;
                 gap: 0; flex-direction: column;

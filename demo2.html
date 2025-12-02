@@ -11,6 +11,8 @@
             --card-bg: #111111;
             --accent: #bf00ff;
             --accent-glow: rgba(191, 0, 255, 0.4);
+            --whatsapp: #25D366; /* Colore WhatsApp */
+            --whatsapp-glow: rgba(37, 211, 102, 0.4);
             --text-main: #ffffff;
             --text-muted: #b3b3b3;
         }
@@ -51,7 +53,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 5%;
-            background: rgba(5, 5, 5, 0.9);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
@@ -62,21 +64,19 @@
         }
 
         .logo { 
-            font-size: 1.5rem; 
+            font-size: 1.2rem; 
             font-weight: 800; 
             letter-spacing: 1px; 
             text-transform: uppercase;
             z-index: 1001;
             display: flex;
             align-items: center;
-            gap: 10px; /* Spazio tra logo e testo */
+            gap: 15px; 
         }
         
-        /* STILE LOGO IMMAGINE - FIXED (COME DA RICHIESTA) */
+        /* STILE LOGO IMMAGINE */
         .logo img {
-            height: 90px;
-            margin-top: -20px;
-            margin-bottom: -20px;
+            height: 50px; 
             width: auto;
             display: block;
             object-fit: contain;
@@ -112,7 +112,6 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* Sfondo corretto con immagine locale */
             background: linear-gradient(to bottom, rgba(5,5,5,0.3), var(--bg-color)), 
                         linear-gradient(45deg, rgba(191,0,255,0.2), rgba(0,0,0,0.8)),
                         url('img/studio_back.jpg');
@@ -163,12 +162,51 @@
             transform: scale(1.05);
         }
 
-        /* --- PLAYER SECTIONS (COMUNE) --- */
+        /* STILE TASTO WHATSAPP */
+        .btn-whatsapp {
+            border-color: var(--whatsapp);
+            box-shadow: 0 0 15px var(--whatsapp-glow);
+        }
+        .btn-whatsapp:hover {
+            background: var(--whatsapp);
+            box-shadow: 0 0 40px var(--whatsapp-glow);
+            color: #fff;
+        }
+
+        /* --- SEZIONE GENERALE --- */
         .section-padding { padding: 100px 5%; }
         .section-title { text-align: center; font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 10px; }
         .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 40px; }
+
+        /* --- ABOUT BOX STYLE --- */
+        #about {
+            background-color: #080808;
+            border-bottom: 1px solid #222;
+        }
+
+        .about-box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #111111, #0d0d0d);
+            padding: 50px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 15px 15px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .about-text:last-child { margin-bottom: 0; }
         
-        /* Modifica layout per Side-by-Side */
+        .highlight { color: var(--accent); font-weight: bold; }
+
+        /* --- DUAL PLAYER LAYOUT (GRID) --- */
         .dual-player-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -183,7 +221,6 @@
             border: 1px solid #333;
             border-radius: 20px;
             padding: 40px;
-            /* Rimosso max-width fisso per adattarsi alla griglia */
             width: 100%; 
             box-sizing: border-box;
             position: relative;
@@ -213,7 +250,7 @@
         }
 
         .play-btn-large {
-            width: 70px; height: 70px; /* Leggermente più piccoli per stare affiancati */
+            width: 70px; height: 70px;
             border-radius: 50%;
             background: var(--accent);
             border: none;
@@ -317,41 +354,11 @@
         .item-title { font-weight: 600; }
         .item-duration { color: var(--text-muted); font-size: 0.8rem; }
 
-        /* --- ABOUT SECTION (MODIFICATA - QUOTE BOX) --- */
-        #about {
-            background-color: #080808;
-            border-bottom: 1px solid #222;
-        }
-        
-        .about-box {
-            max-width: 900px;
-            margin: 0 auto;
-            background: linear-gradient(145deg, #111111, #0d0d0d); /* Sfondo leggermente staccato */
-            padding: 50px;
-            border-left: 4px solid var(--accent); /* Bordo viola citazione */
-            border-radius: 0 15px 15px 0; /* Arrotondato solo a destra */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .about-text {
-            font-size: 1.1rem;
-            color: #ccc;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            text-align: justify; /* Testo ordinato */
-        }
-        
-        .about-text:last-child { margin-bottom: 0; }
-        
-        .highlight {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
         /* --- SERVIZI (GRID) --- */
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* MODIFICA: Da 'repeat(auto-fit...)' a 'repeat(3, 1fr)' per forzare 3 colonne fisse */
+            grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             margin-top: 50px;
         }
@@ -375,43 +382,90 @@
         .card p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
         .icon-box { font-size: 2rem; color: var(--accent); margin-bottom: 20px; }
 
-        /* --- FOOTER --- */
+        /* --- FOOTER & CONTACT (NUOVO LAYOUT) --- */
         footer {
             background: #000;
-            text-align: center;
-            padding: 80px 20px;
+            padding: 80px 5%;
             border-top: 1px solid #222;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Due colonne: Contatti | Mappa */
+            gap: 60px;
+            align-items: center;
+        }
+
+        .contact-info { text-align: left; }
+        
+        .contact-info h2 { font-size: 3rem; margin-bottom: 20px; }
+        .contact-info p { font-size: 1.1rem; color: #aaa; margin-bottom: 40px; max-width: 500px; }
+
+        .buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start; /* Allinea i bottoni a sinistra */
+        }
+
+        .map-section {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .map-section iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            /* Filtro per rendere la mappa scura e coerente col sito */
+            filter: grayscale(100%) invert(92%) contrast(83%);
+        }
+
+        .address-box {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 80px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            grid-column: 1 / -1; /* Occupa tutta la larghezza in basso */
         }
 
         /* --- MEDIA QUERIES (RESPONSIVE) --- */
         @media (max-width: 900px) {
-            /* Sotto i 900px i player vanno uno sotto l'altro */
-            .dual-player-grid {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
+            .dual-player-grid { grid-template-columns: 1fr; gap: 50px; }
+            
+            /* AGGIUNTA: Forza i servizi in verticale sotto i 900px (salta lo step "2+1") */
+            .grid-3 { grid-template-columns: 1fr; }
+
+            /* Footer mobile: una colonna */
+            .contact-container { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .contact-info { text-align: center; margin: 0 auto; }
+            .contact-info p { margin: 0 auto 40px auto; }
+            .buttons-group { align-items: center; }
         }
 
         @media (max-width: 768px) {
-            .hamburger { 
-                display: block; 
-                margin-left: auto; /* FIX: Spinge l'hamburger a destra */
-            }
+            .hamburger { display: block; margin-left: auto; }
             .hamburger.active .bar:nth-child(2) { opacity: 0; }
             .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
             .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-            /* FIX: Rimuove la nav dal flusso per permettere all'hamburger di andare a destra */
-            nav {
-                position: absolute;
-                width: 0;
-                height: 0;
-                padding: 0;
-                margin: 0;
-            }
-
+            nav { position: absolute; width: 0; height: 0; padding: 0; margin: 0; }
             nav ul {
-                position: fixed; left: -100%; top: 70px;
+                position: fixed; left: -100%; top: 80px;
                 gap: 0; flex-direction: column;
                 background-color: var(--bg-color);
                 width: 100%; text-align: center;
@@ -427,22 +481,19 @@
             .about-box { padding: 30px; }
             .player-container { padding: 30px 20px; }
             .switch-btn { padding: 10px 20px; font-size: 0.85rem; }
-            footer h2 { font-size: 2rem !important; }
+            footer h2 { font-size: 2.5rem !important; }
         }
     </style>
 
     <!-- ================= CONFIGURAZIONE FACILE (MODIFICA QUI) ================= -->
     <script>
-        // 1. CARTELLA FILE AUDIO
         const AUDIO_FOLDER = "audio/"; 
 
-        // 2. LISTA A/B (MIX vs MASTER)
         const AB_FILES_LIST = [
-            "SoundHelix-Song-8.mp3",  // Demo
+            "SoundHelix-Song-8.mp3", 
             "SoundHelix-Song-15.mp3" 
         ];
 
-        // 3. LISTA PORTFOLIO (LAVORI FINITI)
         const PORTFOLIO_FILES_LIST = [
             "SoundHelix-Song-10.mp3",
             "SoundHelix-Song-16.mp3"
@@ -455,9 +506,7 @@
 
     <header>
         <div class="logo">
-            <!-- LOGO IMMAGINE -->
             <img src="img/logo.svg" alt="JB Project Studio">
-            <!-- OPZIONE 2: LOGO TESTUALE -->
             JB PROJECT <span>STUDIO</span>
         </div>
 
@@ -467,7 +516,6 @@
         <nav>
             <ul>
                 <li><a href="#about" class="nav-link">Chi Sono</a></li>
-                <!-- Voce unica per il Portfolio -->
                 <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                 <li><a href="#services" class="nav-link">Servizi</a></li>
                 <li><a href="#contact" class="nav-link">Contatti</a></li>
@@ -477,18 +525,16 @@
 
     <section class="hero">
         <div class="reveal active"> 
-            <h1>Il Tuo Suono<br><span>La tua identità</span></h1>
-            <!-- TESTO HERO AGGIORNATO AL FOCUS ARTISTICO -->
-            <p>Produzione Artistica & Musicale. Dal concept al master finale.</p>
+            <h1>Il Tuo Suono<br><span>Senza Compromessi</span></h1>
+            <p>Produzione Artistica & Musicale. Dal concept al master finale, costruiamo la tua identità sonora unica.</p>
             <a href="#portfolio" class="btn-glow">Ascolta le Demo</a>
         </div>
     </section>
 
-    <!-- ================= NUOVA SEZIONE: CHI SONO (BOX ORDINATO) ================= -->
+    <!-- ================= SEZIONE: CHI SONO (BOX ORDINATO) ================= -->
     <section id="about" class="section-padding">
         <div class="reveal">
             <h2 class="section-title">Oltre il Tasto Rec</h2>
-            <!-- Riquadro stile citazione per ordinare il testo -->
             <div class="about-box">
                 <p class="about-text">
                     Mi chiamo <span class="highlight">Giordano Boschetti</span>. Dal 1990 coltivo una visione: non limitarsi a registrare, ma <em>scolpire</em> l'identità artistica. 
@@ -547,7 +593,6 @@
                         <div class="controls-wrapper">
                             <button class="play-btn-large" id="port-play-btn">▶</button>
 
-                            <!-- Spacer per allineare visivamente i player -->
                             <div style="height: 38px;"></div> 
 
                             <div class="progress-container">
@@ -570,28 +615,25 @@
         </div>
     </section>
 
-    <!-- ================= SEZIONE SERVIZI (RIORGANIZZATA) ================= -->
+    <!-- ================= SEZIONE SERVIZI ================= -->
     <section id="services" class="section-padding" style="background: #0a0a0a;">
         <div class="reveal">
             <h2 class="section-title">I Miei Servizi</h2>
             <p class="section-subtitle">Un percorso completo per la tua musica.</p>
             
             <div class="grid-3">
-                <!-- 1. PRODUZIONE ARTISTICA (MAIN SKILL) -->
                 <div class="card">
                     <div class="icon-box">🎨</div>
                     <h3>Produzione Artistica</h3>
                     <p>Il cuore del progetto. Non registriamo e basta: definiamo insieme la direzione stilistica, l'intenzione e l'identità del tuo suono per renderlo unico e riconoscibile.</p>
                 </div>
 
-                <!-- 2. PRODUZIONE MUSICALE -->
                 <div class="card">
                     <div class="icon-box">🎹</div>
                     <h3>Produzione Musicale</h3>
                     <p>Dall'arrangiamento al Beat Making. Costruisco la strumentale attorno alla tua voce, valorizzando il mood senza mai sovrastare l'artista. Suono reale e programmazione digitale.</p>
                 </div>
 
-                <!-- 3. MIX & MASTERING -->
                 <div class="card">
                     <div class="icon-box">🎚️</div>
                     <h3>Mix & Mastering</h3>
@@ -601,13 +643,39 @@
         </div>
     </section>
 
+    <!-- ================= FOOTER RISTRUTTURATO (LOCATION + CONTACT) ================= -->
     <footer id="contact">
-        <div class="reveal">
-            <h2 style="font-size: 3rem; margin-bottom: 20px;">Lavoriamo Insieme</h2>
-            <p style="margin-bottom: 40px; font-size: 1.2rem; color: #aaa;">Raccontami il tuo progetto. Rispondo entro 24h.</p>
-            <a href="mailto:info@jbprojectstudio.com" class="btn-glow">Richiedi Preventivo</a>
+        <div class="reveal contact-container">
             
-            <div style="margin-top: 60px; font-size: 0.8rem; opacity: 0.5;">
+            <!-- Colonna Sinistra: Testo e Pulsanti -->
+            <div class="contact-info">
+                <h2>Lavoriamo Insieme</h2>
+                <p>Il feeling è tutto. Prenota un <strong>colloquio conoscitivo gratuito</strong> in studio (o una call online) per raccontarmi il tuo progetto senza impegno.</p>
+                
+                <div class="buttons-group">
+                    <!-- LINK WHATSAPP: Inserisci il tuo numero dopo 39 -->
+                    <a href="https://wa.me/3485491400" class="btn-glow btn-whatsapp" target="_blank">
+                        💬 Scrivimi su WhatsApp
+                    </a>
+                    
+                    <a href="mailto:info@jbprojectstudio.com" class="btn-glow">
+                        📧 Richiedi Preventivo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonna Destra: Mappa e Indirizzo -->
+            <div style="width: 100%;">
+                <div class="map-section">
+                    <!-- MAPPA EMBED GOOGLE: Sostituisci "src" con il tuo embed reale -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.6145657400943!2d12.165913776484722!3d42.520998224918195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1328f1e36b6fb107%3A0x75eb6eff7eea1aea!2sJB%20Project%20Studio%20(Giordano%20Boschetti)!5e0!3m2!1sit!2sit!4v1764718453290!5m2!1sit!2sit" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="address-box">
+                    <p><strong>JB Project Studio</strong> - Viterbo (VT)<br>Ricevo su appuntamento</p>
+                </div>
+            </div>
+
+            <div class="copyright">
                 &copy; 2025 JB Project Studio. All rights reserved.
             </div>
         </div>

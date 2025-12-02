@@ -64,7 +64,18 @@
             letter-spacing: 1px; 
             text-transform: uppercase;
             z-index: 1001;
+            /* Per allineare verticalmente immagine e testo se necessario */
+            display: flex;
+            align-items: center;
         }
+        
+        /* NUOVO STILE PER LOGO IMMAGINE */
+        .logo img {
+            max-height: 50px; /* Altezza massima per non rompere la navbar */
+            width: auto;      /* Mantiene le proporzioni */
+            display: block;   /* Rimuove spazi indesiderati */
+        }
+
         .logo span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
 
         /* Desktop Menu */
@@ -122,7 +133,8 @@
             font-size: clamp(1rem, 2vw, 1.3rem);
             color: var(--text-muted);
             max-width: 600px;
-            margin-bottom: 40px;
+            /* MODIFICA: margin-bottom era 40px. Ora usiamo la shorthand per centrare orizzontalmente */
+            margin: 0 auto 40px auto; 
         }
 
         .btn-glow {
@@ -384,7 +396,16 @@
 <body>
 
     <header>
-        <div class="logo">JB PROJECT <span>STUDIO</span></div>
+        <div class="logo">
+            <!-- OPZIONE 1: LOGO IMMAGINE (Attiva) -->
+            <!-- Sostituisci 'https://placehold.co/200x50/bf00ff/ffffff?text=LOGO' con il percorso del tuo file (es. 'images/logo.svg') -->
+            <img src="logo/logo.svg" alt="JB Project Studio">
+
+            <!-- OPZIONE 2: LOGO TESTUALE (Disattivata/Commentata) -->
+            <!-- Per tornare al testo, togli i commenti qui sotto e metti i commenti all'immagine sopra -->
+            <!-- JB PROJECT <span>STUDIO</span> -->
+        </div>
+
         <div class="hamburger">
             <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </div>

@@ -873,7 +873,7 @@
         <div class="copyright">&copy; 2025 JB Project Studio - P.IVA: XXXXXXXXXXX | All rights reserved.</div>
     </footer>
 
-  <script>
+<script>
         // --- 1. UTILITIES & NAVIGAZIONE ---
         const hamburger = document.querySelector(".hamburger");
         const navMenu = document.querySelector("nav ul");
@@ -924,10 +924,14 @@
             return minutes + ":" + secs;
         }
 
-        // --- 2. COSTRUZIONE LISTE (PULITA) ---
+        // --- 2. COSTRUZIONE LISTE (PULITA & FILTRATA) ---
         
         function parseABList(list) {
-            return list.map(fullFileName => {
+            // FIX: Filtra via automaticamente i file che finiscono con "_raw"
+            // Se nella lista c'è "brano_raw.mp3", viene ignorato per evitare doppioni rotti.
+            const cleanList = list.filter(filename => !filename.toLowerCase().includes('_raw.'));
+
+            return cleanList.map(fullFileName => {
                 const parts = getFileParts(fullFileName);
                 // Pulisce il titolo visivo
                 let cleanTitle = parts.name.replace(/-/g, ' ').replace(/_/g, ' ');
@@ -1010,7 +1014,6 @@
                     // Error handling
                     audio.addEventListener('error', (e) => {
                         console.error("Errore caricamento audio:", audio.src);
-                        // Non mostriamo errore all'utente subito per evitare spam visivo, ma controlliamo in console
                     });
                     audio.addEventListener('ended', () => {
                          this.isPlaying = false;

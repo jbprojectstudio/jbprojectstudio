@@ -22,6 +22,8 @@
             --whatsapp-glow: rgba(37, 211, 102, 0.4);
             --text-main: #ffffff;
             --text-muted: #b3b3b3;
+            --google-blue: #4285F4; /* Colori Google per le recensioni */
+            --google-orange: #FBBC05;
         }
 
         /* --- BASE --- */
@@ -380,7 +382,7 @@
         .card p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
         .icon-box { font-size: 2rem; color: var(--accent); margin-bottom: 20px; }
 
-        /* --- RECENSIONI (SLIDER STYLE) --- */
+        /* --- RECENSIONI (GOOGLE STYLE) --- */
         #reviews-grid {
             display: flex; 
             gap: 30px;
@@ -389,7 +391,6 @@
             padding: 20px 10px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none; 
-            /* RIMOSSO scroll-behavior: smooth; per affidare lo scroll al JS */
         }
         
         #reviews-grid::-webkit-scrollbar { display: none; } 
@@ -398,43 +399,78 @@
             position: relative;
             max-width: 1200px; 
             margin: 0 auto;
-            /* AGGIUNTO Padding per le frecce */
             padding: 0 50px; 
         }
 
+        .google-summary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 50px;
+            display: inline-flex; /* Per centrare il blocco */
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid #333;
+        }
+        .g-icon {
+            width: 30px; height: 30px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .g-icon svg { width: 18px; height: 18px; }
+        .g-score { font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .g-stars { color: var(--google-orange); letter-spacing: 2px; }
+
         .review-card {
-            background: var(--card-bg);
+            background: #1a1a1a; /* Sfondo stile Google Dark Mode */
             border: 1px solid #333;
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             transition: 0.3s;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            /* Calcolo per 3 colonne desktop */
+            gap: 10px;
             flex: 0 0 calc((100% - 60px) / 3); 
             scroll-snap-align: start;
+            position: relative;
         }
         
-        .review-header { display: flex; align-items: center; gap: 15px; }
+        .review-header { display: flex; align-items: center; gap: 12px; }
         
         .review-avatar {
-            width: 40px; height: 40px;
-            background: #333;
-            color: #fff;
+            width: 35px; height: 35px;
+            background: var(--accent); /* Avatar colorato */
+            color: #000;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-transform: uppercase; 
         }
 
-        .review-author h4 { font-size: 1rem; margin: 0; }
-        .review-author span { font-size: 0.8rem; color: #777; }
-        .review-stars { color: var(--accent); font-size: 1.1rem; }
-        .review-text { font-size: 0.95rem; color: #ccc; font-style: italic; }
+        .review-author h4 { font-size: 0.95rem; margin: 0; color: #fff; }
+        .review-date { font-size: 0.75rem; color: #888; display: block; }
+        
+        .review-meta { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .review-stars { color: var(--google-orange); font-size: 0.9rem; }
+        
+        .review-text { font-size: 0.9rem; color: #ddd; line-height: 1.5; margin-top: 5px; }
+        
+        /* Icona G piccola nella card */
+        .card-g-icon {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 20px; height: 20px;
+            opacity: 0.5;
+        }
 
         /* Frecce Slider */
         .slider-btn {
@@ -446,7 +482,7 @@
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             position: absolute;
-            top: 50%;
+            top: 55%; /* Aggiustato per centrare rispetto alle card */
             transform: translateY(-50%);
             z-index: 10;
             transition: 0.3s;
@@ -454,7 +490,6 @@
         }
         .slider-btn:hover { background: var(--accent); color: #000; }
         
-        /* Posizionamento frecce nel padding del wrapper */
         .slider-btn.prev { left: 0; }
         .slider-btn.next { right: 0; }
 
@@ -588,7 +623,7 @@
             .buttons-group { margin: 0 auto; align-items: center; }
             .social-links { justify-content: center; } 
             
-            /* Su mobile/tablet nascondiamo le frecce (si usa lo swipe) e togliamo il padding del wrapper */
+            /* Su mobile/tablet nascondiamo le frecce (si usa lo swipe) */
             .slider-btn { display: none; }
             .reviews-slider-wrapper { padding: 0; }
         }
@@ -635,10 +670,11 @@
         const AB_FILES_LIST = [ "SoundHelix-Song-8.mp3", "SoundHelix-Song-15.mp3" ];
         const PORTFOLIO_FILES_LIST = [ "SoundHelix-Song-10.mp3", "SoundHelix-Song-16.mp3" ];
         const REVIEWS_DATA = [
-            { name: "Marco R.", role: "Musicista / Band", text: "Giordano ha capito subito il sound che cercavamo. Consigliatissimo!" },
-            { name: "Luca S.", role: "Cantautore", text: "Il mix è uscito potente e definito. Professionale e disponibile." },
-            { name: "Sara B.", role: "Vocalist", text: "Lavorare con JB Project Studio è stata un'esperienza formativa. Orecchio pazzesco." },
-            { name: "Elena V.", role: "Producer", text: "Un tocco magico sulle basse frequenze. Finalmente il mio brano suona come volevo." }
+            { name: "Marco R.", text: "Giordano ha capito subito il sound che cercavamo. Consigliatissimo!" },
+            { name: "Luca S.", text: "Il mix è uscito potente e definito. Professionale e disponibile." },
+            { name: "Sara B.", text: "Lavorare con JB Project Studio è stata un'esperienza formativa. Orecchio pazzesco." },
+            { name: "Elena V.", text: "Un tocco magico sulle basse frequenze. Finalmente il mio brano suona come volevo." },
+            { name: "Band X", text: "Servizio top, studio pazzesco e grande disponibilità." }
         ];
     </script>
 
@@ -753,7 +789,17 @@
         <div class="reveal">
             <h2 class="section-title">Dicono di Me</h2>
             <p class="section-subtitle">Alcune parole dagli artisti con cui ho lavorato.</p>
+            
             <div class="reviews-slider-wrapper">
+                <!-- GOOGLE SUMMARY HEADER -->
+                <div class="google-summary">
+                    <div class="g-icon">
+                        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    </div>
+                    <div class="g-score">5.0</div>
+                    <div class="g-stars">★★★★★</div>
+                </div>
+
                 <button class="slider-btn prev" onclick="scrollReviews(-1)">&#10094;</button>
                 <div id="reviews-grid"></div> 
                 <button class="slider-btn next" onclick="scrollReviews(1)">&#10095;</button>
@@ -782,7 +828,7 @@
 
     <footer>
         <div class="social-links">
-            <a href="#" class="social-link" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <a href="#" class="social-link" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
             <a href="#" class="social-link" title="Facebook"><svg viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
             <a href="#" class="social-link" title="YouTube"><svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
         </div>
@@ -986,8 +1032,12 @@
                         <div class="review-header">
                             <div class="review-avatar">${initial}</div>
                             <div class="review-author"><h4>${review.name}</h4><span>${review.role}</span></div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="card-g-icon" alt="G">
                         </div>
-                        <div class="review-stars">★★★★★</div>
+                        <div class="review-meta">
+                            <div class="review-stars">★★★★★</div>
+                            <span class="review-date">un mese fa</span>
+                        </div>
                         <p class="review-text">"${review.text}"</p>
                     </div>`;
                 container.innerHTML += cardHTML;

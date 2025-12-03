@@ -654,6 +654,13 @@
             .about-box { padding: 30px; }
             .player-container { padding: 30px 20px; }
             
+            /* --- FIX SLIDER MOBILE --- */
+            
+            /* Aggiungiamo padding laterale al wrapper per fare spazio alle frecce */
+            .reviews-slider-wrapper { 
+                padding: 0 45px; 
+            }
+
             /* Mobile: 1 card visibile (100% width) */
             .review-card { 
                 flex: 0 0 100%; 
@@ -661,8 +668,17 @@
                 padding: 20px;
             }
             
-            /* Riattiviamo le frecce su mobile se preferito */
-            .slider-btn { display: flex; }
+            /* Riattiviamo le frecce su mobile, ma più piccole e distanziate */
+            .slider-btn { 
+                display: flex; 
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            /* Spostiamole un po' dai bordi estremi per estetica */
+            .slider-btn.prev { left: 5px; }
+            .slider-btn.next { right: 5px; }
 
             .switch-btn { padding: 10px 20px; font-size: 0.85rem; }
             footer h2 { font-size: 2.5rem !important; }
@@ -671,19 +687,35 @@
 
     <!-- ================= CONFIGURAZIONE FACILE (MODIFICA QUI) ================= -->
     <script>
-        // 1. CARTELLA FILE AUDIO
+        // 1. CARTELLA FILE AUDIO (Lasciare vuota se si usano link esterni completi)
         const AUDIO_FOLDER = "audio/"; 
 
         // 2. LISTA A/B (MIX vs MASTER)
+        // NOTA: Ho commentato i tuoi file originali e messo dei DEMO funzionanti.
+        // Quando avrai caricato i tuoi file nella cartella, scommenta le righe sotto e rimuovi quelle demo.
         const AB_FILES_LIST = [
-            "Steve - Algofobia.mp3", 
-            "Steve - Algofobia_raw.mp3" 
+            // ESEMPIO DEMO (Link esterni funzionanti)
+            {
+                title: "Demo Song (SoundHelix)",
+                master: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                raw: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" 
+            },
+            
+            // I TUOI FILE (Scommenta quando pronti)
+            // "Steve - Algofobia.mp3", 
         ];
 
         // 3. LISTA PORTFOLIO (LAVORI FINITI)
         const PORTFOLIO_FILES_LIST = [
-            "Steve - Algofobia.mp3",
-            "MZeta - apocalisse.mp3"
+            // ESEMPIO DEMO
+            {
+                title: "Portfolio Demo Track",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            },
+
+            // I TUOI FILE
+            // "Steve - Algofobia.mp3",
+            // "MZeta - apocalisse.mp3"
         ];
 
         // 4. LISTA RECENSIONI
@@ -909,9 +941,12 @@
             return { name: filename.substring(0, lastDotIndex), ext: filename.substring(lastDotIndex) };
         }
 
-        // Funzione per costruire il percorso corretto (gestisce spazi e caratteri speciali)
+        // Funzione per costruire il percorso corretto (gestisce spazi e caratteri speciali e link esterni)
         function getSafePath(filename) {
-            // Rimuove spazi iniziali/finali e codifica per URL
+            // Se è già un URL completo (http/https), lo restituisce così com'è
+            if (filename.startsWith('http')) return filename;
+            
+            // Altrimenti aggiunge la cartella locale e codifica
             return AUDIO_FOLDER + encodeURIComponent(filename.trim());
         }
 
@@ -927,36 +962,55 @@
         // --- 2. COSTRUZIONE LISTE (PULITA & FILTRATA) ---
         
         function parseABList(list) {
-            // FIX: Filtra via automaticamente i file che finiscono con "_raw"
-            // Se nella lista c'è "brano_raw.mp3", viene ignorato per evitare doppioni rotti.
-            const cleanList = list.filter(filename => !filename.toLowerCase().includes('_raw.'));
+            const parsed = [];
+            
+            list.forEach(item => {
+                // Caso A: Stringa semplice (File locale con convenzione _raw)
+                if (typeof item === 'string') {
+                    if (item.toLowerCase().includes('_raw.')) return; // Salta se è già il file raw
 
-            return cleanList.map(fullFileName => {
-                const parts = getFileParts(fullFileName);
-                // Pulisce il titolo visivo
-                let cleanTitle = parts.name.replace(/-/g, ' ').replace(/_/g, ' ');
-                
-                // Costruzione automatica del nome file RAW
-                // Esempio: se il file è "canzone.mp3", cerca "canzone_raw.mp3"
-                const rawFileName = `${parts.name}_raw${parts.ext}`;
-
-                return {
-                    title: cleanTitle,
-                    srcA: getSafePath(rawFileName),
-                    srcB: getSafePath(fullFileName)
-                };
+                    const parts = getFileParts(item);
+                    let cleanTitle = parts.name.replace(/-/g, ' ').replace(/_/g, ' ');
+                    
+                    // Costruzione automatica nome file RAW
+                    const rawFileName = `${parts.name}_raw${parts.ext}`;
+                    
+                    parsed.push({
+                        title: cleanTitle,
+                        srcA: getSafePath(rawFileName),
+                        srcB: getSafePath(item)
+                    });
+                } 
+                // Caso B: Oggetto esplicito (per link esterni o configurazioni custom)
+                else if (typeof item === 'object') {
+                    parsed.push({
+                        title: item.title,
+                        srcA: item.raw,
+                        srcB: item.master
+                    });
+                }
             });
+            return parsed;
         }
 
         function parsePortfolioList(list) {
-            return list.map(fullFileName => {
-                const parts = getFileParts(fullFileName);
-                let cleanTitle = parts.name.replace(/-/g, ' ').replace(/_/g, ' ');
-                
-                return {
-                    title: cleanTitle,
-                    src: getSafePath(fullFileName)
-                };
+            return list.map(item => {
+                // Caso A: Stringa semplice (File locale)
+                if (typeof item === 'string') {
+                    const parts = getFileParts(item);
+                    let cleanTitle = parts.name.replace(/-/g, ' ').replace(/_/g, ' ');
+                    return {
+                        title: cleanTitle,
+                        src: getSafePath(item)
+                    };
+                } 
+                // Caso B: Oggetto esplicito (Link esterno)
+                else {
+                     return {
+                        title: item.title,
+                        src: item.src
+                    };
+                }
             });
         }
 
@@ -1197,10 +1251,10 @@
                 
                 this.audio.addEventListener('timeupdate', () => this.updateProgress());
                 this.audio.addEventListener('loadedmetadata', () => {
-                     if(!isNaN(this.audio.duration)) {
+                      if(!isNaN(this.audio.duration)) {
                         this.durDisplay.innerText = formatTime(this.audio.duration);
                         this.progressBar.max = this.audio.duration;
-                     }
+                      }
                 });
                 this.audio.addEventListener('error', () => {
                     console.error("Errore file portfolio:", this.audio.src);

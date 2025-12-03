@@ -873,7 +873,7 @@
         <div class="copyright">&copy; 2025 JB Project Studio - P.IVA: XXXXXXXXXXX | All rights reserved.</div>
     </footer>
 
-    <script>
+  <script>
         // --- 1. UTILITIES & NAVIGAZIONE ---
         const hamburger = document.querySelector(".hamburger");
         const navMenu = document.querySelector("nav ul");
@@ -903,6 +903,7 @@
         }
 
         function getFileParts(filename) {
+            if (!filename) return { name: "", ext: "" };
             const lastDotIndex = filename.lastIndexOf('.');
             if (lastDotIndex === -1) return { name: filename, ext: '' }; 
             return { name: filename.substring(0, lastDotIndex), ext: filename.substring(lastDotIndex) };
@@ -910,8 +911,8 @@
 
         // Funzione per costruire il percorso corretto (gestisce spazi e caratteri speciali)
         function getSafePath(filename) {
-            // AUDIO_FOLDER è definita nel blocco di configurazione in alto (nell'HEAD)
-            return AUDIO_FOLDER + encodeURIComponent(filename);
+            // Rimuove spazi iniziali/finali e codifica per URL
+            return AUDIO_FOLDER + encodeURIComponent(filename.trim());
         }
 
         function formatTime(seconds) {
@@ -955,8 +956,7 @@
             });
         }
 
-        // Generazione dati usando le variabili definite nell'HEAD
-        // Se le variabili non sono definite (es. errore config), usa array vuoti per non rompere il sito
+        // Generazione dati
         const abTracksData = (typeof AB_FILES_LIST !== 'undefined') ? parseABList(AB_FILES_LIST) : [];
         const portfolioTracksData = (typeof PORTFOLIO_FILES_LIST !== 'undefined') ? parsePortfolioList(PORTFOLIO_FILES_LIST) : [];
 
@@ -985,9 +985,13 @@
 
                 if (!this.audioA || !this.audioB) return;
 
+                // Default
                 this.activeAudio = this.audioA;
                 this.renderPlaylist();
-                if(abTracksData.length > 0) this.loadTrack(0);
+                if(abTracksData.length > 0) {
+                    // Carica il primo ma NON suona (solo init)
+                    this.setTrackData(0, false);
+                }
 
                 this.playBtn.addEventListener('click', () => this.togglePlay());
                 
@@ -998,10 +1002,15 @@
                 [this.audioA, this.audioB].forEach(audio => {
                     audio.addEventListener('timeupdate', () => this.updateProgress());
                     audio.addEventListener('loadedmetadata', () => {
-                        if(this.activeAudio) {
+                        if(this.activeAudio && !isNaN(this.activeAudio.duration)) {
                             this.durDisplay.innerText = formatTime(this.activeAudio.duration);
                             this.progressBar.max = this.activeAudio.duration;
                         }
+                    });
+                    // Error handling
+                    audio.addEventListener('error', (e) => {
+                        console.error("Errore caricamento audio:", audio.src);
+                        // Non mostriamo errore all'utente subito per evitare spam visivo, ma controlliamo in console
                     });
                     audio.addEventListener('ended', () => {
                          this.isPlaying = false;
@@ -1031,6 +1040,7 @@
                     let li = document.createElement('li');
                     li.className = 'playlist-item';
                     li.innerHTML = `<span class="item-title">${track.title}</span>`;
+                    // Click sulla playlist -> Carica E SUONA
                     li.addEventListener('click', () => this.loadTrack(index));
                     this.playlistList.appendChild(li);
                 });
@@ -1046,16 +1056,12 @@
                 }
             },
 
-            loadTrack: function(index) {
-                if(typeof portPlayer !== 'undefined') portPlayer.forcePause();
-                
+            // Funzione interna per settare i dati senza per forza suonare
+            setTrackData: function(index, autoPlay) {
                 this.currentTrackIndex = index;
                 const track = abTracksData[index];
                 
-                this.isPlaying = false;
-                this.playBtn.innerHTML = "▶";
-                this.playBtn.classList.remove("playing");
-                
+                // Ferma tutto prima di cambiare
                 this.audioA.pause();
                 this.audioB.pause();
                 this.progressBar.value = 0;
@@ -1064,32 +1070,66 @@
                 this.audioB.src = track.srcB;
                 this.titleDisplay.innerText = track.title;
 
+                // Update UI Playlist
                 if(this.playlistList) {
                     this.playlistList.querySelectorAll('.playlist-item').forEach((item, i) => {
                         item.classList.toggle('active', i === index);
                     });
                 }
-                this.switchAB('A');
+
+                // Reset su A (RAW)
+                this.activeAudio = this.audioA;
+                this.switchBtns.forEach(btn => btn.classList.remove('active'));
+                if(document.querySelector('.switch-btn[data-track="A"]')) {
+                    document.querySelector('.switch-btn[data-track="A"]').classList.add('active');
+                }
+
+                if (autoPlay) {
+                    this.playAudio();
+                } else {
+                    this.isPlaying = false;
+                    this.playBtn.innerHTML = "▶";
+                    this.playBtn.classList.remove("playing");
+                }
+            },
+
+            // Chiamata dalla playlist (Click utente)
+            loadTrack: function(index) {
+                if(typeof portPlayer !== 'undefined') portPlayer.forcePause();
+                this.setTrackData(index, true); // true = AutoPlay
+            },
+
+            playAudio: function() {
+                this.isPlaying = true;
+                this.playBtn.innerHTML = "⏸";
+                this.playBtn.classList.add("playing");
+                
+                // Sync
+                let t = this.audioA.currentTime; 
+                this.audioB.currentTime = t;
+                
+                let playPromise = this.activeAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Autoplay prevent o errore:", error);
+                        this.titleDisplay.innerText = "Errore File / Autoplay";
+                        this.isPlaying = false;
+                        this.playBtn.innerHTML = "▶";
+                        this.playBtn.classList.remove("playing");
+                    });
+                }
             },
 
             togglePlay: function() {
                 if (this.isPlaying) {
                     this.activeAudio.pause();
+                    this.isPlaying = false;
                     this.playBtn.innerHTML = "▶";
                     this.playBtn.classList.remove("playing");
                 } else {
                     if(typeof portPlayer !== 'undefined') portPlayer.forcePause();
-                    
-                    let currentTime = this.activeAudio.currentTime;
-                    // Sincronizza sempre prima di ripartire
-                    this.audioA.currentTime = currentTime;
-                    this.audioB.currentTime = currentTime;
-                    
-                    this.activeAudio.play();
-                    this.playBtn.innerHTML = "⏸";
-                    this.playBtn.classList.add("playing");
+                    this.playAudio();
                 }
-                this.isPlaying = !this.isPlaying;
             },
 
             switchAB: function(target) {
@@ -1102,10 +1142,12 @@
 
                 if (target === 'A') {
                     this.activeAudio = this.audioA;
-                    document.querySelector('.switch-btn[data-track="A"]').classList.add('active');
+                    let btn = document.querySelector('.switch-btn[data-track="A"]');
+                    if(btn) btn.classList.add('active');
                 } else {
                     this.activeAudio = this.audioB;
-                    document.querySelector('.switch-btn[data-track="B"]').classList.add('active');
+                    let btn = document.querySelector('.switch-btn[data-track="B"]');
+                    if(btn) btn.classList.add('active');
                 }
 
                 this.activeAudio.currentTime = currentTime;
@@ -1117,9 +1159,11 @@
                 const currentTime = this.activeAudio.currentTime;
                 this.progressBar.value = currentTime;
                 this.currTimeDisplay.innerText = formatTime(currentTime);
-                // Aggiorna sempre per sicurezza
-                this.durDisplay.innerText = formatTime(this.activeAudio.duration);
-                this.progressBar.max = this.activeAudio.duration;
+                // Aggiorna durata se disponibile
+                if(!isNaN(this.activeAudio.duration)) {
+                    this.durDisplay.innerText = formatTime(this.activeAudio.duration);
+                    this.progressBar.max = this.activeAudio.duration;
+                }
             }
         };
 
@@ -1144,14 +1188,19 @@
                 if (!this.audio) return;
 
                 this.renderPlaylist();
-                if(portfolioTracksData.length > 0) this.loadTrack(0);
+                if(portfolioTracksData.length > 0) this.setTrackData(0, false);
 
                 this.playBtn.addEventListener('click', () => this.togglePlay());
                 
                 this.audio.addEventListener('timeupdate', () => this.updateProgress());
                 this.audio.addEventListener('loadedmetadata', () => {
-                    this.durDisplay.innerText = formatTime(this.audio.duration);
-                    this.progressBar.max = this.audio.duration;
+                     if(!isNaN(this.audio.duration)) {
+                        this.durDisplay.innerText = formatTime(this.audio.duration);
+                        this.progressBar.max = this.audio.duration;
+                     }
+                });
+                this.audio.addEventListener('error', () => {
+                    console.error("Errore file portfolio:", this.audio.src);
                 });
                 this.audio.addEventListener('ended', () => {
                     this.playBtn.innerHTML = "▶";
@@ -1189,17 +1238,12 @@
                 }
             },
 
-            loadTrack: function(index) {
-                if(typeof abPlayer !== 'undefined') abPlayer.forcePause();
-
+            setTrackData: function(index, autoPlay) {
                 this.currentTrackIndex = index;
                 const track = portfolioTracksData[index];
                 
                 this.audio.pause();
-                this.playBtn.innerHTML = "▶";
-                this.playBtn.classList.remove("playing");
                 this.progressBar.value = 0;
-
                 this.audio.src = track.src;
                 this.titleDisplay.innerText = track.title;
                 
@@ -1208,14 +1252,37 @@
                         item.classList.toggle('active', i === index);
                     });
                 }
+
+                if(autoPlay) {
+                    this.playAudio();
+                } else {
+                    this.playBtn.innerHTML = "▶";
+                    this.playBtn.classList.remove("playing");
+                }
+            },
+
+            loadTrack: function(index) {
+                if(typeof abPlayer !== 'undefined') abPlayer.forcePause();
+                this.setTrackData(index, true);
+            },
+
+            playAudio: function() {
+                let playPromise = this.audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        this.playBtn.innerHTML = "⏸";
+                        this.playBtn.classList.add("playing");
+                    }).catch(error => {
+                        console.log("Autoplay error:", error);
+                        this.titleDisplay.innerText = "Errore File";
+                    });
+                }
             },
 
             togglePlay: function() {
                 if (this.audio.paused) {
                     if(typeof abPlayer !== 'undefined') abPlayer.forcePause();
-                    this.audio.play();
-                    this.playBtn.innerHTML = "⏸";
-                    this.playBtn.classList.add("playing");
+                    this.playAudio();
                 } else {
                     this.audio.pause();
                     this.playBtn.innerHTML = "▶";

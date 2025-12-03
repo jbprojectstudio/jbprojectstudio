@@ -23,7 +23,10 @@
                         }
                     },
                     backgroundImage: {
-                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(15,15,15,1)), url('https://images.unsplash.com/photo-1493225255756-d9584f8606e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')",
+                        /* Nuovo sfondo Hero: Astratto Neon/Linee più luminoso e visibile.
+                           Ridotto il gradiente nero per far vedere meglio i dettagli.
+                        */
+                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(15,15,15,1)), url('https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')",
                         'stage-pattern': "linear-gradient(to right, rgba(15,15,15,0.9), rgba(15,15,15,0.8)), url('https://images.unsplash.com/photo-1598387993441-a364f854c3e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2076&q=80')"
                     }
                 }
@@ -35,10 +38,6 @@
         .neon-text {
             text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
         }
-        .logo-placeholder {
-            background-color: #000000; /* Sfondo nero richiesto */
-            background-image: url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23333" fill-rule="evenodd"%3E%3Cpath d="M0 40L40 0H20L0 20M40 40V20L20 40"/%3E%3C/g%3E%3C/svg%3E');
-        }
     </style>
 </head>
 <body class="bg-brand-dark text-white font-sans antialiased overflow-x-hidden">
@@ -49,14 +48,17 @@
             
             <!-- LOGO SPACE - NON TRANSPARENT BLACK BG -->
             <div class="mx-auto mb-8 w-64 h-64 md:w-80 md:h-80 bg-black shadow-2xl flex flex-col items-center justify-center border border-white/10 relative overflow-hidden group rounded-xl">
-                <!-- Placeholder Text - Replace img src with actual logo -->
-                <div class="text-center p-4">
-                    <i class="fas fa-microphone-lines text-6xl text-gray-600 mb-4 group-hover:text-brand-purple transition-colors duration-500"></i>
-                    <p class="text-gray-500 font-display uppercase tracking-widest text-sm">Inserisci qui<br>il Logo PNG</p>
-                    <p class="text-xs text-gray-700 mt-2">(Sfondo Nero)</p>
+                <!-- Immagine Logo inserita come richiesto -->
+                <img src="imgpl/logopl.png" 
+                     alt="Project Live Logo" 
+                     class="absolute inset-0 w-full h-full object-contain p-4"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                
+                <!-- Fallback (appare solo se l'immagine non viene trovata nella cartella) -->
+                <div class="hidden text-center p-4">
+                    <i class="fas fa-image text-4xl text-gray-600 mb-2"></i>
+                    <p class="text-xs text-red-400">Logo non trovato in<br>imgpl/logopl.png</p>
                 </div>
-                <!-- Esempio di come inserire il logo (decommentare e cambiare src): -->
-                <!-- <img src="tuo-logo.png" alt="Project Live Logo" class="absolute inset-0 w-full h-full object-contain p-4"> -->
             </div>
 
             <h1 class="text-5xl md:text-7xl font-display font-bold mb-4 leading-tight">
@@ -72,7 +74,7 @@
                     <i class="fas fa-star"></i> Candidati Ora
                 </a>
                 <a href="#about" class="px-8 py-4 border border-white/30 hover:bg-white/10 text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
-                    Scopri di più <i class="fas fa-arrow-down"></i>
+                    <i class="fas fa-info-circle"></i> Scopri di più
                 </a>
             </div>
         </div>
@@ -213,7 +215,6 @@
                     <h4 class="text-2xl font-display font-bold text-white">PROJECT <span class="text-brand-purple">LIVE</span></h4>
                     <p class="text-gray-500 text-sm mt-2">Viterbo, Italia</p>
                 </div>
-                <!-- Social links rimosso come richiesto -->
             </div>
             <div class="border-t border-white/10 mt-8 pt-8 text-center text-gray-600 text-sm">
                 &copy; 2026 Project Live. Tutti i diritti riservati.

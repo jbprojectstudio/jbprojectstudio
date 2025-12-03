@@ -81,12 +81,12 @@
             gap: 15px; 
         }
         
-        /* STILE LOGO IMMAGINE - RIPRISTINATO A 90PX CON MARGINI NEGATIVI */
+        /* STILE LOGO IMMAGINE */
         .logo img {
             height: 90px; 
             width: auto;
-            margin-top: -20px;    /* Margine negativo ripristinato */
-            margin-bottom: -20px; /* Margine negativo ripristinato */
+            margin-top: -20px;   
+            margin-bottom: -20px; 
             display: block;
             object-fit: contain;
         }
@@ -184,20 +184,50 @@
         .section-title { text-align: center; font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 10px; }
         .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 40px; }
 
-        /* --- ABOUT BOX --- */
+        /* --- ABOUT BOX (MODIFICATO PER IMMAGINE) --- */
         #about {
             background-color: #080808;
             border-bottom: 1px solid #222;
         }
 
         .about-box {
-            max-width: 900px;
+            max-width: 1000px; /* Aumentato leggermente per accomodare l'immagine */
             margin: 0 auto;
             background: linear-gradient(145deg, #111111, #0d0d0d);
             padding: 50px;
             border-left: 4px solid var(--accent);
             border-radius: 0 15px 15px 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            /* Layout Flex per affiancare foto e testo */
+            display: flex;
+            align-items: center; /* Centra verticalmente */
+            gap: 40px; /* Spazio tra foto e testo */
+        }
+
+        .about-img-wrapper {
+            flex: 0 0 35%; /* La foto occupa il 35% dello spazio */
+            max-width: 350px;
+            position: relative;
+        }
+
+        .about-img-wrapper img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            /* Effetto bianco e nero leggero opzionale, rimuovi il filter se vuoi colori pieni */
+            filter: grayscale(20%); 
+            transition: 0.3s;
+        }
+        
+        .about-img-wrapper img:hover {
+            filter: grayscale(0%);
+            border-color: var(--accent);
+        }
+
+        .about-content {
+            flex: 1; /* Il testo occupa lo spazio rimanente */
         }
 
         .about-text {
@@ -686,6 +716,17 @@
             .dual-player-grid { grid-template-columns: 1fr; gap: 50px; }
             .grid-3 { grid-template-columns: 1fr; }
 
+            /* ABOUT SECTION MOBILE - STACK VERTICALE */
+            .about-box { 
+                flex-direction: column; 
+                text-align: center; 
+            }
+            .about-text { text-align: center; }
+            .about-img-wrapper { 
+                max-width: 250px; /* Foto più piccola su mobile */
+                margin: 0 auto; 
+            }
+
             /* Tablet: 2 card visibili */
             .review-card { flex: 0 0 calc((100% - 30px) / 2); }
 
@@ -891,12 +932,21 @@
         </div>
     </section>
 
+    <!-- SEZIONE ABOUT MODIFICATA CON IMMAGINE -->
     <section id="about" class="section-padding">
         <div class="reveal">
             <h2 class="section-title">Oltre il Tasto Rec</h2>
             <div class="about-box">
-                <p class="about-text">Mi chiamo <span class="highlight">Giordano Boschetti</span>. Dal 1990 coltivo una visione: non limitarsi a registrare, ma <em>scolpire</em> l'identità artistica.</p>
-                <p class="about-text">Che si tratti di chitarre, tastiere o beat elettronici, il mio obiettivo non è solo farti "suonare bene", ma creare un prodotto che ti rappresenti. <span>Non cerco clienti, ma progetti in cui credere.</span></p>
+                <!-- IMMAGINE -->
+                <div class="about-img-wrapper">
+                    <img src="img/jo.jpg" alt="Giordano Boschetti" width="713" height="911">
+                </div>
+                
+                <!-- TESTO -->
+                <div class="about-content">
+                    <p class="about-text">Mi chiamo <span class="highlight">Giordano Boschetti</span>. Dal 1990 coltivo una visione: non limitarsi a registrare, ma <em>scolpire</em> l'identità artistica.</p>
+                    <p class="about-text">Che si tratti di chitarre, tastiere o beat elettronici, il mio obiettivo non è solo farti "suonare bene", ma creare un prodotto che ti rappresenti. <span>Non cerco clienti, ma progetti in cui credere.</span></p>
+                </div>
             </div>
         </div>
     </section>

@@ -606,61 +606,94 @@
         .slider-btn.prev { left: 0; }
         .slider-btn.next { right: 0; }
 
-        /* --- NEWSLETTER STYLE (STRISCIA FULL WIDTH) --- */
+        /* --- NEWSLETTER STYLE: SPLIT LAYOUT --- */
         #newsletter {
-            /* Colore di sfondo della fascia (coincide con quello consigliato per Brevo) */
             background-color: #080808; 
-            
-            /* Linee sottili per separarlo visivamente dal resto */
             border-top: 1px solid #222;
             border-bottom: 1px solid #222;
-            
-            /* Ripristinato il padding come richiesto */
-            padding-top: 80px !important; 
-            padding-bottom: 80px;
-            
+            padding: 80px 5%;
             width: 100%;
-            position: relative;
         }
 
-        /* Un tocco di stile: una luce viola sfumata dietro al titolo della sezione */
-        #newsletter::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.5;
-        }
-
-        .newsletter-wrapper {
-            max-width: 800px; /* Più largo per respirare */
+        .newsletter-content {
+            max-width: 1100px; /* Larghezza massima aumentata */
             margin: 0 auto;
-            text-align: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Due colonne uguali */
+            gap: 60px; /* Spazio tra testo e form */
+            align-items: center; /* Centra verticalmente */
         }
 
-        /* Rimosso l'effetto "Box/Card" - Ora è pulito */
-        .newsletter-clean {
+        .newsletter-text-side {
+            text-align: left;
+        }
+
+        .newsletter-text-side h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: #fff;
+        }
+
+        .newsletter-text-side p {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 30px;
+            max-width: 450px;
+        }
+        
+        /* Freccia o elemento decorativo opzionale */
+        .arrow-pointer {
+            font-size: 2rem;
+            color: var(--accent);
+            display: inline-block;
+            animation: bounceRight 2s infinite;
+        }
+
+        @keyframes bounceRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .newsletter-form-side {
             width: 100%;
-            margin-top: 30px;
-            background: transparent; /* Nessuno sfondo, usa quello della sezione */
-            border: none;
-            box-shadow: none;
+            /* Bordo sottile opzionale per evidenziare l'area attiva */
+            border-left: 1px solid #222; 
+            padding-left: 40px;
         }
 
         .brevo-iframe {
             display: block;
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 100%;
             width: 100%;
-            height: 500px; 
+            height: 450px; /* Altezza sicura */
             border: none;
-            background: transparent; /* Importante */
+            background: transparent;
             overflow: hidden;
+        }
+
+        /* MOBILE: Torna uno sotto l'altro */
+        @media (max-width: 900px) {
+            .newsletter-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            .newsletter-text-side {
+                text-align: center;
+            }
+            .newsletter-text-side p { margin: 0 auto; }
+            .newsletter-form-side {
+                border-left: none;
+                border-top: 1px solid #222;
+                padding-left: 0;
+                padding-top: 30px;
+            }
+            .arrow-pointer { transform: rotate(90deg); animation: bounceDown 2s infinite; }
+            
+            @keyframes bounceDown {
+                0%, 100% { transform: translateY(0) rotate(90deg); }
+                50% { transform: translateY(10px) rotate(90deg); }
+            }
         }
 
         /* --- FOOTER & CONTACT --- */
@@ -1046,11 +1079,15 @@
     </section>
 
 <section id="newsletter">
-        <div class="reveal newsletter-wrapper">
-            <h2 class="section-title">Resta Connesso</h2>
-            <p class="section-subtitle">Iscriviti per ricevere risorse gratuite e aggiornamenti.</p>
+        <div class="reveal newsletter-content">
             
-            <div class="newsletter-clean">
+            <div class="newsletter-text-side">
+                <h2>Resta nel<br><span style="color: var(--accent);">Loop</span></h2>
+                <p>Niente spam, solo risorse per la tua musica, aggiornamenti dallo studio e contenuti esclusivi.</p>
+                <div class="arrow-pointer">➔</div>
+            </div>
+
+            <div class="newsletter-form-side">
                 <iframe 
                     class="brevo-iframe"
                     src="https://fff73002.sibforms.com/serve/MUIFAK9trnN124fEd4z_qJmmj9imbBX1ewKMHYtBiEWvyyTJzKwT59b4eXPqhVoJsjA5zKCSGG1LSL1FSe_ra2kPqarlSZeL4JodXc07rdffXUyNWnQFAzmgX0VJJyYIi_mo8qQ8arcUWt-M4BkoxelLfzNudgie_SKCNhW7asLx2E-txeNafuTr9VS7ORm53W7495Hd_emCWYkd3A==" 
@@ -1059,6 +1096,7 @@
                     allowfullscreen>
                 </iframe>
             </div>
+
         </div>
     </section>
     <section id="contact">

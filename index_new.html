@@ -606,29 +606,49 @@
         .slider-btn.prev { left: 0; }
         .slider-btn.next { right: 0; }
 
-        /* --- NEWSLETTER STYLE (CORRETTO) --- */
+        /* --- NEWSLETTER STYLE (STRISCIA FULL WIDTH) --- */
         #newsletter {
-            /* Rimosso padding-top enorme per avvicinarlo alle recensioni */
-            padding-top: 0px !important; 
+            /* Colore di sfondo della fascia (coincide con quello consigliato per Brevo) */
+            background-color: #080808; 
+            
+            /* Linee sottili per separarlo visivamente dal resto */
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            
+            /* Ripristinato il padding come richiesto */
+            padding-top: 80px !important; 
             padding-bottom: 80px;
+            
+            width: 100%;
+            position: relative;
         }
 
-        .newsletter-box {
-            max-width: 600px;
-            margin: 40px auto 0 auto;
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            border-top: 1px solid var(--accent);
-            transition: 0.3s;
-            overflow: hidden; /* Sicurezza extra */
+        /* Un tocco di stile: una luce viola sfumata dietro al titolo della sezione */
+        #newsletter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
         }
 
-        .newsletter-box:hover {
-            box-shadow: 0 0 30px var(--accent-glow);
-            border-color: var(--accent);
+        .newsletter-wrapper {
+            max-width: 800px; /* Più largo per respirare */
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Rimosso l'effetto "Box/Card" - Ora è pulito */
+        .newsletter-clean {
+            width: 100%;
+            margin-top: 30px;
+            background: transparent; /* Nessuno sfondo, usa quello della sezione */
+            border: none;
+            box-shadow: none;
         }
 
         .brevo-iframe {
@@ -637,10 +657,9 @@
             margin-right: auto;
             max-width: 100%;
             width: 100%;
-            /* AUMENTATO ALTEZZA PER EVITARE SCROLLBAR */
             height: 500px; 
             border: none;
-            background: transparent;
+            background: transparent; /* Importante */
             overflow: hidden;
         }
 
@@ -1026,12 +1045,12 @@
         </div>
     </section>
 
-    <section id="newsletter" class="section-padding">
-        <div class="reveal">
+<section id="newsletter">
+        <div class="reveal newsletter-wrapper">
             <h2 class="section-title">Resta Connesso</h2>
             <p class="section-subtitle">Iscriviti per ricevere risorse gratuite e aggiornamenti.</p>
             
-            <div class="newsletter-box">
+            <div class="newsletter-clean">
                 <iframe 
                     class="brevo-iframe"
                     src="https://fff73002.sibforms.com/serve/MUIFAK9trnN124fEd4z_qJmmj9imbBX1ewKMHYtBiEWvyyTJzKwT59b4eXPqhVoJsjA5zKCSGG1LSL1FSe_ra2kPqarlSZeL4JodXc07rdffXUyNWnQFAzmgX0VJJyYIi_mo8qQ8arcUWt-M4BkoxelLfzNudgie_SKCNhW7asLx2E-txeNafuTr9VS7ORm53W7495Hd_emCWYkd3A==" 
